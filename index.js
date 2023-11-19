@@ -105,4 +105,66 @@ function addDepartment() {
     });
 }
 
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        name: 'title',
+        type: 'input',
+        message: 'Enter the title of the role:'
+      },
+      {
+        name: 'salary',
+        type: 'input',
+        message: 'Enter the salary for the role:'
+      },
+      {
+        name: 'department_id',
+        type: 'input',
+        message: 'Enter the department ID for the role:'
+      }
+    ])
+    .then(answer => {
+      db.query('INSERT INTO role SET ?', { title: answer.title, salary: answer.salary, department_id: answer.department_id }, (err, result) => {
+        if (err) throw err;
+        console.log('Role added successfully!');
+        startApplication();
+      });
+    });
+}
+
+function addEmployee(){
+  inquirer
+    .prompt([
+      {
+        name: 'first_name',
+        type: 'input',
+        message: 'Enter the first name:'
+      },
+      {
+        name: 'last_name',
+        type: 'input',
+        message: 'Enter the lat name:'
+      },
+      {
+        name: 'role_id',
+        type: 'input',
+        message: "Enter the role ID: "
+      },
+      {
+        name: 'manager_id',
+        type: 'input',
+        message: "Enter the manager ID:"
+      }
+    ])
+    .then(answer => {
+      db.query('INSERT INTO employee SET ?', {first_name: answer.first_name, last_name: answer.last_name, role_id: answer.role_id, manager_id: answer.manager_id},
+      (err, result) => {
+        if (err) throw err;
+        console.log('Employee added successfully!');
+        startApplication();
+      });
+    });
+}
+
 return startApplication();
