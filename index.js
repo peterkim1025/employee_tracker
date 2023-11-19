@@ -144,7 +144,7 @@ function addEmployee(){
       {
         name: 'last_name',
         type: 'input',
-        message: 'Enter the lat name:'
+        message: 'Enter the last name:'
       },
       {
         name: 'role_id',
@@ -165,6 +165,40 @@ function addEmployee(){
         startApplication();
       });
     });
+}
+
+function updateEmployeeRole() {
+  db.query('SELECT * FROM employee', (err, employees) => {
+    if (err) throw err;
+
+    const employeeChoices = employees.map(employee => ({
+      name: `${employee.first_name} ${employee.last_name}`,
+      value: employee.id
+    }));
+
+    inquirer
+      .prompt([
+        {
+          name: 'employeeId',
+          type: 'list',
+          message: 'Select the employee to update:',
+          choices: employeeChoices
+        },
+        {
+          name: 'newRoleId',
+          type: 'input',
+          message: 'Enter the new role ID for the employee:'
+        }
+      ])
+      .then(answer => {
+        const { employeeId, newRoleId } = answer;
+        db.query('UPDATE employee SET role_id = ? WHERE id = ?', [newRoleId, employeeId], (err, result) => {
+          if (err) throw err;
+          console.log('Employee role updated successfully!');
+          startApplication();
+        });
+      });
+  });
 }
 
 return startApplication();
